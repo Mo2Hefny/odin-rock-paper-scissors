@@ -2,6 +2,13 @@
 <html lang="en">
 
 <head>
+  <!--Fonts-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Silkscreen:wght@400;700&display=swap"
+    rel="stylesheet">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/styles.css">
@@ -10,57 +17,67 @@
 
 <body>
   <div class="table">
-    <div class="scoreboard ingrain">
-      <div class="enemy-score">0</div>
-      <div class="player-score">0</div>
+    <div class="container">
+      <div class="scoreboard ingrain">
+        <div class="score" id="enemy-score">0</div>
+        <div class="score" id="player-score">0</div>
+      </div>
+      <div class="controls ingrain">
+        <button id="start-game">Start Game!</button>
+        <button id="reset-game">Reset Game!</button>
+      </div>
     </div>
     <div class="board">
       <div class="playarea">
-        <div class="section enemy">
-          <div class="total-points" id="enemy-siege-score">0</div>
-          <div class="cards enemy ingrain" id="enemy-siege"></div>
+        <div class="enemy">
+          <div class="section">
+            <div class="total-points" id="enemy-siege-score">0</div>
+            <div class="cards siege ingrain" id="enemy-siege"></div>
+          </div>
+          <div class="section">
+            <div class="total-points" id="enemy-range-score">0</div>
+            <div class="cards range ingrain" id="enemy-range"></div>
+          </div>
+          <div class="section">
+            <div class="total-points" id="enemy-melee-score">0</div>
+            <div class="cards melee ingrain" id="enemy-melee"></div>
+          </div>
         </div>
-        <div class="section enemy">
-          <div class="total-points" id="enemy-range-score">0</div>
-          <div class="cards enemy ingrain" id="enemy-range"></div>
-        </div>
-        <div class="section enemy">
-          <div class="total-points" id="enemy-melee-score">0</div>
-          <div class="cards enemy ingrain" id="enemy-melee"></div>
-        </div>
-        <div class="section player start">
-          <div class="total-points" id="player-melee-score">0</div>
-          <div class="cards player ingrain" id="player-melee"></div>
-        </div>
-        <div class="section player">
-          <div class="total-points" id="player-range-score">0</div>
-          <div class="cards player ingrain" id="player-range"></div>
-        </div>
-        <div class="section player">
-          <div class="total-points" id="player-siege-score">0</div>
-          <div class="cards player ingrain" id="player-siege"></div>
+        <div class="player">
+          <div class="section">
+            <div class="total-points" id="player-melee-score">0</div>
+            <div class="cards melee ingrain" id="player-melee"></div>
+          </div>
+          <div class="section">
+            <div class="total-points" id="player-range-score">0</div>
+            <div class="cards range ingrain" id="player-range"></div>
+          </div>
+          <div class="section">
+            <div class="total-points" id="player-siege-score">0</div>
+            <div class="cards siege ingrain" id="player-siege"></div>
+          </div>
         </div>
       </div>
       <div class="deck">
-        <div class="cards ingrain">
+        <div class="cards">
           <div class="card-holder" id="rock">
             <div class="info">
-              <div class="cost"></div>
-              <div class="type"></div>
+              <div class="cost">0</div>
+              <div class="type">S</div>
             </div>
-            <p class="name"></p>
           </div>
-          <div class="card-holder" id="paper">
+          <p class="name"></p>
+          <div class="card-holder" id="paper-rhinos">
             <div class="info">
-              <div class="cost"></div>
-              <div class="type"></div>
+              <div class="cost">0</div>
+              <div class="type">M</div>
             </div>
-            <p class="name"></p>
+            <p class="name">Paper Rhinos</p>
           </div>
           <div class="card-holder" id="scissors">
             <div class="info">
-              <div class="cost"></div>
-              <div class="type"></div>
+              <div class="cost">0</div>
+              <div class="type">A</div>
             </div>
             <p class="name"></p>
           </div>
@@ -69,12 +86,18 @@
 
     </div>
     <div class="abilities ingrain">
-      <div class="card-holder ability" id="rock-ability"></div>
+      <div class="card-holder ability" id="rock-ability">
+        <div class="image">
+          <div class="cost"></div>
+          <div class="type"></div>
+        </div>
+        <p class="name"></p>
+      </div>
       <div class="card-holder ability" id="paper-ability"></div>
       <div class="card-holder ability" id="scissors-ability"></div>
     </div>
   </div>
-  <script src="./js/script.js"></script>
 </body>
+<script src="./js/script.js"></script>
 
 </html>

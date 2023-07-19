@@ -19,16 +19,21 @@
 
 body {
   background-color: var(--secondary);
-  width: 100%;
   height: 100vh;
-  padding: 5em 5%;
+  padding: 2em 5%;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  font-family: 'Caudex', serif;
+  font-family: 'Silkscreen', cursive;
 }
 
 .table {
-  height: 100%;
+  flex: 1 1 auto;
+  max-width: 1100px;
   display: flex;
   justify-content: center;
+  align-items: stretch;
   padding: 3em;
   gap: 3em;
   background-color: var(--secondary);
@@ -39,6 +44,13 @@ body {
   border-radius: 10px;
 }
 
+.controls {
+  margin-top: 1.5em;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
 .ingrain {
   box-shadow:
     inset -6px -6px 8px rgba(255, 255, 255, 0.3),
@@ -46,9 +58,31 @@ body {
   border-radius: 10px;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .scoreboard {
   width: 90px;
-  max-width: 400px;
+  max-height: 620px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 2.5em;
+  font-size: 32px;
+  color: var(--primary-contrast);
+}
+
+.score {
+  color: transparent;
+  background: var(--primary-contrast);
+  -webkit-background-clip: text;
+  text-shadow: 2px 5px 5px rgba(255, 255, 255, 0.3);
+  font-size: 70px;
+  text-align: center;
 }
 
 .board {
@@ -56,33 +90,36 @@ body {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 }
 
 .playarea {
   width: 100%;
-  height: 80%;
+  max-height: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+}
+
+.section {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.player,
+.enemy {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   gap: 1em;
 }
 
-.section {
-  flex: 1;
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.player.start {
-  margin-top: 5em;
-}
-
 .total-points {
+  position: relative;
+  z-index: 5;
   width: 50px;
   height: 50px;
   border-radius: 25px;
@@ -100,8 +137,9 @@ body {
 }
 
 .deck {
+  margin-top: 1.5em;
   width: 100%;
-  height: 15%;
+  height: 110px;
   padding-left: 50px;
 }
 
@@ -110,10 +148,10 @@ body {
   flex: 1 1 auto;
   min-width: 300px;
   border-radius: 6px;
-}
-
-.card-holder {
-  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 5px;
 }
 
 .abilities {
@@ -155,4 +193,112 @@ body {
   background: url(../img/scissors-ability.jpeg);
   background-size: cover;
   background-position: center;
+}
+
+.melee,
+.range,
+.siege {
+  position: relative;
+  z-index: 1;
+}
+
+.melee::before {
+  background: url(../img/melee.png);
+}
+
+.range::before {
+  background: url(../img/range.png);
+}
+
+.siege::before {
+  background: url(../img/siege.png);
+}
+
+.melee::before,
+.range::before,
+.siege::before {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-position: center;
+  background-size: 60px;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+}
+
+
+
+/* Cards */
+
+.deck .card-holder {
+  position: relative;
+  z-index: 2;
+  background: var(--accent-contrast);
+  border-radius: 6px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s ease;
+}
+
+.card-holder:hover {
+  z-index: 5;
+  transform: scale(1.5);
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  height: auto;
+}
+
+.deck .type,
+.deck .cost {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(0, -10px);
+  border-radius: 50%;
+  padding: 5px;
+  background: var(--secondary-contrast);
+  font-size: 14px;
+  color: var(--bg);
+}
+
+.card-holder p {
+  color: var(--bg);
+  text-align: center;
+  transform: translate(0, 65px);
+  background-color: var(--accent-contrast);
+  height: 0;
+  color: transparent;
+  transition: 0.3s ease 0.1s;
+}
+
+.card-holder:hover>p {
+  height: 35%;
+  color: var(--bg);
+}
+
+.deck .cards {
+  border-radius: 10px;
+  padding: 3px;
+  background-color: var(--secondary);
+  box-shadow: inset -5px -5px 15px rgba(255, 255, 255, 0.15),
+    inset 5px 5px 15px rgba(0, 0, 0, 0.15),
+    -5px -5px 15px rgba(255, 255, 255, 0.15),
+    5px 5px 15px rgba(0, 0, 0, 0.15);
+  justify-content: flex-start;
+}
+
+
+#paper-rhinos {
+  background: url(../img/paper-rhinos.jpeg);
+  background-position: center;
+  background-size: cover;
+  height: 100%;
 }
