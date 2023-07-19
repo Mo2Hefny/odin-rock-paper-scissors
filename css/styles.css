@@ -1,0 +1,158 @@
+:root {
+  --text: #090f16;
+  --bg: #e5edf5;
+  --primary: #7199c6;
+  --secondary: #d7e2ef;
+  --accent: #83a6ce;
+  --text-contrast: #fafafa;
+  --bg-contrast: #050505;
+  --primary-contrast: #e88521;
+  --secondary-contrast: rgb(47, 25, 4);
+  --accent-contrast: #f0b375;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--secondary);
+  width: 100%;
+  height: 100vh;
+  padding: 5em 5%;
+  justify-content: center;
+}
+
+.table {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 3em;
+  gap: 3em;
+  background-color: var(--secondary);
+  box-shadow:
+    15px 50px 50px rgba(0, 0, 0, 0.1),
+    inset -10px -10px 15px rgba(0, 0, 0, 0.1),
+    inset 15px 15px 15px rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.ingrain {
+  box-shadow:
+    inset -6px -6px 8px rgba(255, 255, 255, 0.3),
+    inset 10px 10px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.scoreboard {
+  width: 90px;
+  max-width: 400px;
+}
+
+.board {
+  max-width: 800px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.playarea {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1em;
+}
+
+.section {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.player.start {
+  margin-top: 5em;
+}
+
+.total-points {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  background-color: var(--accent-contrast);
+  transform: translate(20px, 0);
+  box-shadow:
+    inset -5px -5px 8px rgba(0, 0, 0, 0.1),
+    inset 8px 8px 8px rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--bg);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.deck {
+  width: 100%;
+  height: 15%;
+  padding-left: 50px;
+}
+
+.cards {
+  height: 100%;
+  flex: 1 1 auto;
+  min-width: 300px;
+  border-radius: 6px;
+}
+
+.card-holder {
+  border-radius: 6px;
+}
+
+.abilities {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  height: 300px;
+  padding: 10px 10px 0 10px;
+}
+
+.ability {
+  width: 90px;
+  height: 90px;
+  box-shadow:
+    inset -10px -10px 15px rgba(0, 0, 0, 0.1),
+    inset 15px 15px 15px rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+}
+
+.ability.used {
+  display: none;
+}
+
+#rock-ability {
+  background: url(../img/rock-ability.jpeg);
+  background-size: cover;
+  background-position: center;
+}
+
+#paper-ability {
+  background: url(../img/paper-ability.jpeg);
+  background-size: cover;
+  background-position: center;
+}
+
+#scissors-ability {
+  background: url(../img/scissors-ability.jpeg);
+  background-size: cover;
+  background-position: center;
+}

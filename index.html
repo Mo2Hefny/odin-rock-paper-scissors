@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/styles.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="table">
+    <div class="scoreboard ingrain">
+      <div class="enemy-score">0</div>
+      <div class="player-score">0</div>
+    </div>
+    <div class="board">
+      <div class="playarea">
+        <div class="section enemy">
+          <div class="total-points" id="enemy-siege-score">0</div>
+          <div class="cards enemy ingrain" id="enemy-siege"></div>
+        </div>
+        <div class="section enemy">
+          <div class="total-points" id="enemy-range-score">0</div>
+          <div class="cards enemy ingrain" id="enemy-range"></div>
+        </div>
+        <div class="section enemy">
+          <div class="total-points" id="enemy-melee-score">0</div>
+          <div class="cards enemy ingrain" id="enemy-melee"></div>
+        </div>
+        <div class="section player start">
+          <div class="total-points" id="player-melee-score">0</div>
+          <div class="cards player ingrain" id="player-melee"></div>
+        </div>
+        <div class="section player">
+          <div class="total-points" id="player-range-score">0</div>
+          <div class="cards player ingrain" id="player-range"></div>
+        </div>
+        <div class="section player">
+          <div class="total-points" id="player-siege-score">0</div>
+          <div class="cards player ingrain" id="player-siege"></div>
+        </div>
+      </div>
+      <div class="deck">
+        <div class="cards ingrain">
+          <div class="card-holder" id="rock">
+            <div class="info">
+              <div class="cost"></div>
+              <div class="type"></div>
+            </div>
+            <p class="name"></p>
+          </div>
+          <div class="card-holder" id="paper">
+            <div class="info">
+              <div class="cost"></div>
+              <div class="type"></div>
+            </div>
+            <p class="name"></p>
+          </div>
+          <div class="card-holder" id="scissors">
+            <div class="info">
+              <div class="cost"></div>
+              <div class="type"></div>
+            </div>
+            <p class="name"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="abilities ingrain">
+      <div class="card-holder ability" id="rock-ability"></div>
+      <div class="card-holder ability" id="paper-ability"></div>
+      <div class="card-holder ability" id="scissors-ability"></div>
+    </div>
+  </div>
+  <script src="./js/script.js"></script>
+</body>
+
+</html>
