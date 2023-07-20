@@ -16,65 +16,64 @@
 </head>
 
 <body>
-  <h1 class="title">Rock Paper Scissors: Gwent Edition!</h1>
+  <h1 class="title engraved-text" id="title">Rock Paper Scissors: <span class="engraved-text color-effect">Gwent Edition!</span></h1>
   <div class="table">
-    <div class="container">
-      <div class="scoreboard engraved">
-        <div class="score" id="enemy-score">0</div>
-        <div class="score" id="player-score">0</div>
-      </div>
-      <div class="controls engraved">
-        <button id="start-game">Start Game!</button>
-        <button id="reset-game">Reset Game!</button>
-      </div>
-    </div>
-    <div class="board">
-      <div class="playarea">
+    <div class="container-h">
+      <div class="board">
         <div class="enemy">
           <div class="section">
+            <div class="score">0</div>
             <div class="total-points" id="enemy-siege-score">0</div>
             <div class="cards siege engraved" id="enemy-siege"></div>
           </div>
           <div class="section">
+            <div class="score engraved-text" id="enemy-score">0</div>
             <div class="total-points" id="enemy-range-score">0</div>
             <div class="cards range engraved" id="enemy-range"></div>
           </div>
           <div class="section">
+            <div class="score">0</div>
             <div class="total-points" id="enemy-melee-score">0</div>
             <div class="cards melee engraved" id="enemy-melee"></div>
           </div>
         </div>
+        <p class="commentary engraved-text">Start Game!</p>
         <div class="player">
           <div class="section">
+            <div class="score">0</div>
             <div class="total-points" id="player-melee-score">0</div>
             <div class="cards melee engraved" id="player-melee"></div>
           </div>
           <div class="section">
+            <div class="score engraved-text" id="player-score">0</div>
             <div class="total-points" id="player-range-score">0</div>
             <div class="cards range engraved" id="player-range"></div>
           </div>
           <div class="section">
+            <div class="score">0</div>
             <div class="total-points" id="player-siege-score">0</div>
             <div class="cards siege engraved" id="player-siege"></div>
           </div>
         </div>
       </div>
-      <div class="deck">
-        <div class="cards"></div>
-      </div>
-
-    </div>
-    <div class="abilities engraved">
-      <div class="card-holder ability" id="rock-ability">
-        <div class="image">
-          <div class="cost"></div>
-          <div class="type"></div>
+      <div class="container-v sidebar">
+        <div class="controls">
+          <button id="start-game">Start</button>
+          <button class="engraved-text" id="reset-game">Reset</button>
+          <button class="engraved-text" id="next-round">Next</button>
         </div>
-        <p class="name"></p>
+        <div class="abilities-section">
+          <h3 class="engraved-text color-effect">One Use!</h3>
+          <div class="abilities engraved">
+            <div class="ability locked" id="rock-ability"></div>
+            <div class="ability locked" id="paper-ability"></div>
+            <div class="ability locked" id="scissors-ability"></div>
+          </div>
+        </div>
       </div>
-      <div class="card-holder ability" id="paper-ability"></div>
-      <div class="card-holder ability" id="scissors-ability"></div>
     </div>
+    <div class="cards" id="deck"></div>
+
   </div>
 </body>
 <script src="./js/script.js"></script>
