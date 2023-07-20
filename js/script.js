@@ -1,4 +1,6 @@
 const cardsPerRound = 5;
+const SELECTIONS_PER_ROUND = 4;
+const ROUNDS = 3;
 const cardsID = ['paper-archers', 'paper-ballista', 'paper-cannon',
   'paper-ninja', 'paper-peasants', 'paper-rhinos', 'rock-ballista',
   'rock-builders', 'rock-dwarfs', 'rock-forts', 'rock-giants', 'rock-golems',
@@ -6,52 +8,127 @@ const cardsID = ['paper-archers', 'paper-ballista', 'paper-cannon',
   'scissors-boomerang', 'scissors-cavalry', 'scissors-soldier',
   'scissors-wall-grappler'];
 const cardsType = ['R', 'S', 'S', 'R', 'M', 'M', 'S', 'S', 'M', 'M', 'R', 'M',
-'R', 'M', 'M', 'R', 'M', 'M', 'S'];
+  'R', 'M', 'M', 'R', 'M', 'M', 'S'];
 const cardsDamage = [3, 4, 6, 3, 1, 5, 4, 1, 2, 4, 4, 2,
-6, 2, 6, 3, 4, 1, 7];
+  6, 2, 6, 3, 4, 1, 7];
+const abilities = ['rock-ability', 'paper-ability', 'scissors-ability'];
+let enemyAbilitiesUsed = [];
+enemyAbilitiesUsed['rock-ability'] = false;
+enemyAbilitiesUsed['paper-ability'] = false;
+enemyAbilitiesUsed['scissors-ability'] = false;
 
 let playerScore = document.querySelector('#player-score');
 let enemyScore = document.querySelector('#enemy-score');
 
+let playerCardsPlayedInRound = 4;
+let playedRounds = 0;
+let usedAbility = false;
+
 const startGameButton = document.querySelector('#start-game');
 const resetGameButton = document.querySelector('#reset-game');
-
+const nextRoundButton = document.querySelector('#next-round');
+const playerDeckCards = document.querySelector('#deck');
+const abilitySection = document.querySelector('.abilities');
+const commentaryText = document.querySelector('.commentary');
 startGameButton.addEventListener('click', startGame);
 resetGameButton.addEventListener('click', resetGame);
+nextRoundButton.addEventListener('click', nextRound);
+
+function toggleEngrave() {
+  startGameButton.classList.toggle('engraved-text');
+  resetGameButton.classList.toggle('engraved-text');
+  nextRoundButton.classList.add('engraved-text');
+}
 
 function startGame() {
-  const playerDeckCards = document.querySelector('.deck .cards');
   console.log(playerDeckCards.firstChild);
-  if (playerDeckCards.firstChild) return;
+  if (startGameButton.classList.contains('engraved-text')) return;
+  toggleEngrave();
 
+  generateDeck();
+}
+
+function resetGame() {
+  if (resetGameButton.classList.contains('engraved-text')) return;
+
+  playerDeckCards.innerHTML = "";
+  resetBoard();
+
+  /* Abilities */
+  for (const ability of abilitySection.children)
+    ability.classList.remove('used');
+
+  for (const ability of enemyAbilitiesUsed)
+    ability = false;
+  toggleAbilitiesSection();
+
+  /* Board scores */
+  playerScore.textContent = 0;
+  enemyScore.textContent = 0;
+  playedRounds = 0;
+
+  commentaryText.textContent = "Restarted Game!";
+  toggleEngrave();
+}
+
+function nextRound() {
+  if (nextRoundButton.classList.contains('engraved-text')) return;
+  nextRoundButton.classList.toggle('engraved-text');
+  resetBoard();
+  toggleAbilitiesSection();
+
+  playerCardsPlayedInRound = SELECTIONS_PER_ROUND;
+  generateDeck();
+}
+
+function resetBoard() {
+  let playerMeleeScore = document.querySelector('#player-melee-score');
+  let playerRangeScore = document.querySelector('#player-range-score');
+  let playerSiegeScore = document.querySelector('#player-siege-score');
+  let enemyMeleeScore = document.querySelector('#enemy-melee-score');
+  let enemyRangeScore = document.querySelector('#enemy-range-score');
+  let enemySiegeScore = document.querySelector('#enemy-siege-score');
+
+  /* Board scores */
+  playerMeleeScore.textContent = 0;
+  playerRangeScore.textContent = 0;
+  playerSiegeScore.textContent = 0;
+  enemyMeleeScore.textContent = 0;
+  enemyRangeScore.textContent = 0;
+  enemySiegeScore.textContent = 0;
+
+  /* Cards Sections */
+  let enemyBoard = document.querySelector('.enemy');
+  let playerBoard = document.querySelector('.player');
+  for (const section of enemyBoard.children) {
+    console.log(section.childNodes);
+    section.querySelector('.cards').innerHTML = "";
+  }
+  for (const section of playerBoard.children)
+    section.querySelector('.cards').innerHTML = "";
+
+  /* Constants */
+  playerCardsPlayedInRound = SELECTIONS_PER_ROUND;
+  usedAbility = false;
+}
+
+function generateDeck() {
   let cardsLeft = cardsPerRound;
   while (cardsLeft--) {
-    let randomCardNumber;
+    let randomID;
     do {
       randomID = Math.floor(Math.random() * cardsID.length);
     } while (document.getElementById(cardsID[randomID]));
     let name = cardsID[randomID].replaceAll('-', ' ');
     name = name.replace(/\b\w/g, l => l.toUpperCase());
-    console.log(cardsID[randomID]);
-    console.log(cardsType[randomID]);
-    console.log(cardsDamage[randomID]);
-    console.log(name);
-    const card = AddCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], name);
+    const card = addCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], name);
+    console.log(card);
     playerDeckCards.appendChild(card);
   }
+  commentaryText.textContent = 'Pick 4 Cards!';
 }
 
-function resetGame() {
-  console.log("Game Restarted!");
-  const playerDeckCards = document.querySelector('.deck .cards');
-  while (playerDeckCards.firstChild)
-    playerDeckCards.removeChild(playerDeckCards.lastChild);
-  playerScore.textContent = 0;
-  enemyScore.textContent = 0;
-  startGame();
-}
-
-function AddCard(id, damage, type, name) {
+function addCard(id, damage, type, name) {
   const card = document.createElement('div');
   const infoDiv = document.createElement('div');
   const damageDiv = document.createElement('div');
@@ -59,23 +136,230 @@ function AddCard(id, damage, type, name) {
   const p = document.createElement('p');
   card.setAttribute('id', id);
   card.classList.add('card-holder');
-
   infoDiv.classList.add('info');
   damageDiv.classList.add('damage');
   damageDiv.textContent = damage;
+
   typeDiv.classList.add('type');
   typeDiv.textContent = type;
-  infoDiv.appendChild(damageDiv);
-  infoDiv.appendChild(typeDiv);
 
   p.classList.add('name');
   p.textContent = name;
 
+
+  infoDiv.appendChild(damageDiv);
+  infoDiv.appendChild(typeDiv);
   card.appendChild(infoDiv);
   card.appendChild(p);
-  const url = "../img/" + id + ".jpeg";
+  const url = "./img/" + id + ".jpeg";
   card.style.cssText = `background: url(${url});
   background-position: center; background-size: cover;`;
 
   return card;
+}
+
+playerDeckCards.addEventListener('click', game);
+
+function game() {
+  let enemySelection, playerSelection = undefined;
+  if (!nextRoundButton.classList.contains('engraved-text')) return;
+  if (playerCardsPlayedInRound <= 0) {
+    commentaryText.textContent = `All 4 Cards Picked!`;
+    return;
+  }
+
+  for (const card of playerDeckCards.childNodes) {
+    card.addEventListener('click', (event) => {
+      if (event.target.parentNode == playerDeckCards)
+        event.target.classList.add('selected');
+    });
+  }
+  playerSelection = playerDeckCards.querySelector('.selected');
+  playerSelection.classList.remove('selected');
+  if (playerSelection === undefined || playerSelection.parentNode != playerDeckCards) return;
+
+  console.log(`player selected: ${playerSelection.lastChild.textContent}`);
+  enemySelection = getComputerSelection();
+  console.log(`enemy selected: ${enemySelection.lastChild.textContent}`);
+  playRound(playerSelection, enemySelection);
+  updateDeck(playerSelection, enemySelection);
+
+  if (playerCardsPlayedInRound <= 0)
+    toggleAbilitiesSection();
+}
+
+function toggleAbilitiesSection() {
+  const abilitiesHeader = document.querySelector('.abilities-section h3');
+  abilitiesHeader.classList.toggle('color-effect');
+  for (const ability of abilitySection.children)
+    ability.classList.toggle('locked');
+}
+
+function getComputerSelection() {
+  const enemyBoard = document.querySelector('.enemy');
+  let randomID;
+  do {
+    randomID = Math.floor(Math.random() * cardsID.length);
+  } while (enemyBoard.querySelector('#' + cardsID[randomID]));
+  let name = cardsID[randomID].replaceAll('-', ' ');
+  name = name.replace(/\b\w/g, l => l.toUpperCase());
+  commentaryText.textContent = `Enemy Picked ${name}!`;
+  const enemyCard = addCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], "");
+  return enemyCard;
+}
+
+function playRound(playerCard, enemyCard) {
+  let playerCardDamage = Number(playerCard.firstChild.firstChild.textContent);
+  let enemyCardDamage = Number(enemyCard.firstChild.firstChild.textContent);
+  let playerCardType = playerCard.querySelector('.info .type').textContent[0];
+  let enemyCardType = enemyCard.querySelector('.info .type').textContent[0];
+
+  switch (playerCardType) {
+    case 'M':
+      let playerMeleeScore = document.querySelector('#player-melee-score');
+      playerMeleeScore.textContent = Number(playerMeleeScore.textContent) + playerCardDamage;
+      break;
+    case 'R':
+      let playerRangeScore = document.querySelector('#player-range-score');
+      playerRangeScore.textContent = Number(playerRangeScore.textContent) + playerCardDamage;
+      break;
+    case 'S':
+      let playerSiegeScore = document.querySelector('#player-siege-score');
+      playerSiegeScore.textContent = Number(playerSiegeScore.textContent) + playerCardDamage;
+      break;
+  }
+
+  switch (enemyCardType) {
+    case 'M':
+      let enemyMeleeScore = document.querySelector('#enemy-melee-score');
+      enemyMeleeScore.textContent = Number(enemyMeleeScore.textContent) + enemyCardDamage;
+      break;
+    case 'R':
+      let enemyRangeScore = document.querySelector('#enemy-range-score');
+      enemyRangeScore.textContent = Number(enemyRangeScore.textContent) + enemyCardDamage;
+      break;
+    case 'S':
+      let enemySiegeScore = document.querySelector('#enemy-siege-score');
+      enemySiegeScore.textContent = Number(enemySiegeScore.textContent) + enemyCardDamage;
+      break;
+  }
+}
+
+function updateDeck(playerCard, enemyCard) {
+  let playerCardType = playerCard.querySelector('.info .type').textContent[0];
+  let enemyCardType = enemyCard.querySelector('.info .type').textContent[0];
+
+  playerCard.firstChild.style.cssText = 'justify-content: flex-start;';
+  switch (playerCardType) {
+    case 'M':
+      let playerMeleeDeck = document.querySelector('#player-melee');
+      playerMeleeDeck.appendChild(playerCard);
+      break;
+    case 'R':
+      let playerRangeDeck = document.querySelector('#player-range');
+      playerRangeDeck.appendChild(playerCard);
+      break;
+    case 'S':
+      let playerSiegeDeck = document.querySelector('#player-siege');
+      playerSiegeDeck.appendChild(playerCard);
+      break;
+  }
+  enemyCard.firstChild.style.cssText = 'justify-content: flex-start;';
+  switch (enemyCardType) {
+    case 'M':
+      let enemyMeleeDeck = document.querySelector('#enemy-melee');
+      enemyMeleeDeck.appendChild(enemyCard);
+      break;
+    case 'R':
+      let enemyRangeDeck = document.querySelector('#enemy-range');
+      enemyRangeDeck.appendChild(enemyCard);
+      break;
+    case 'S':
+      let enemySiegeDeck = document.querySelector('#enemy-siege');
+      enemySiegeDeck.appendChild(enemyCard);
+      break;
+  }
+  playerCard.firstChild.removeChild(playerCard.querySelector('.info .type'));
+  playerCard.removeChild(playerCard.querySelector('.name'));
+  enemyCard.firstChild.removeChild(enemyCard.querySelector('.info .type'));
+  enemyCard.removeChild(enemyCard.querySelector('.name'));
+  playerCardsPlayedInRound--;
+}
+
+function updateScore() {
+  let playerMeleeScore = Number(document.querySelector('#player-melee-score').textContent);
+  let playerRangeScore = Number(document.querySelector('#player-range-score').textContent);
+  let playerSiegeScore = Number(document.querySelector('#player-siege-score').textContent);
+  let enemyMeleeScore = Number(document.querySelector('#enemy-melee-score').textContent);
+  let enemyRangeScore = Number(document.querySelector('#enemy-range-score').textContent);
+  let enemySiegeScore = Number(document.querySelector('#enemy-siege-score').textContent);
+
+  let playerTotalPoints = playerMeleeScore + playerRangeScore + playerSiegeScore;
+  let enemyTotalPoints = enemyMeleeScore + enemyRangeScore + enemySiegeScore;
+
+  if (playerTotalPoints > enemyTotalPoints) {
+    playerScore.textContent = Number(playerScore.textContent) + 1;
+  }
+  else if (playerTotalPoints < enemyTotalPoints) {
+    enemyScore.textContent = Number(enemyScore.textContent) + 1;
+  }
+
+}
+
+abilitySection.addEventListener('click', abilitySystem);
+
+function abilitySystem() {
+  if (playerCardsPlayedInRound > 0) {
+    commentaryText.textContent = `Play Your Cards First!`;
+    return;
+  }
+  if (usedAbility) {
+    if (playedRounds <= ROUNDS)
+      commentaryText.textContent = `Go To Next Round!`;
+
+    return;
+  }
+  console.log('entered');
+  let enemyAbility, playerAbility = undefined;
+  for (const ability of abilitySection.children) {
+    ability.addEventListener('click', (event) => {
+      event.target.classList.add('selected');
+    });
+  }
+  playerAbility = abilitySection.querySelector('.selected');
+  if (playerAbility === undefined) return;
+
+  playerAbility.classList.remove('selected');
+  playerAbility.classList.add('used');
+
+  enemyAbility = getComputerAbility();
+  activateAbility(playerAbility.getAttribute('id')[0], 'player');
+  nextRoundButton.classList.toggle('engraved-text');
+  usedAbility = true;
+  activateAbility(enemyAbility, 'enemy');
+  updateScore();
+  playedRounds++;
+  if (playedRounds >= 3) setWinner();
+}
+
+function getComputerAbility() {
+  let randomID;
+  do {
+    randomID = Math.floor(Math.random() * abilities.length);
+  } while (enemyAbilitiesUsed[abilities[randomID]]);
+  enemyAbilitiesUsed[abilities[randomID]] = true;
+  return abilities[randomID];
+}
+
+function activateAbility(type, side) {
+  console.log(`The ${side} chose ${type}`);
+}
+
+function setWinner() {
+  if (Number(playerScore.textContent) > Number(enemyScore.textContent))
+    commentaryText.textContent = 'Player Won!';
+  else if (Number(playerScore.textContent) < Number(enemyScore.textContent))
+    commentaryText.textContent = 'Enemy Won!';
+  else
+    commentaryText.textContent = 'A Tie!';
 }
