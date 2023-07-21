@@ -159,7 +159,7 @@ function addCard(id, damage, type, name) {
 playerDeckCards.addEventListener('click', game);
 
 function game(event) {
-  if (event.target == playerDeckCards) return;
+  if (event.target === playerDeckCards) return;
   if (playableCardsPerRound <= 0) {
     commentaryText.textContent = `All 4 Cards Picked!`;
     return;
@@ -239,18 +239,18 @@ function updateScore() {
   let playerTotalPoints = playerMeleeScore + playerRangeScore + playerSiegeScore;
   let enemyTotalPoints = enemyMeleeScore + enemyRangeScore + enemySiegeScore;
 
-  if (playerTotalPoints > enemyTotalPoints) {
+  if (playerTotalPoints > enemyTotalPoints)
     playerScore.textContent = Number(playerScore.textContent) + 1;
-  }
-  else if (playerTotalPoints < enemyTotalPoints) {
+  else if (playerTotalPoints < enemyTotalPoints)
     enemyScore.textContent = Number(enemyScore.textContent) + 1;
-  }
 
+  //commentaryText.textContent = `Player ${playerTotalPoints} - Enemy ${enemyTotalPoints}`;
 }
 
 abilitySection.addEventListener('click', abilitySystem);
 
-function abilitySystem() {
+function abilitySystem(event) {
+  if (event.target === abilitySection) return;
   if (playableCardsPerRound > 0) {
     commentaryText.textContent = `Play Your Cards First!`;
     return;
@@ -258,29 +258,24 @@ function abilitySystem() {
   if (usedAbility) {
     if (playedRounds <= ROUNDS)
       commentaryText.textContent = `Go To Next Round!`;
-
     return;
   }
-  console.log('entered');
-  let enemyAbility, playerAbility = undefined;
-  for (const ability of abilitySection.children) {
-    ability.addEventListener('click', (event) => {
-      event.target.classList.add('selected');
-    });
-  }
-  playerAbility = abilitySection.querySelector('.selected');
+  let enemyAbility = undefined;
+  let playerAbility = event.target;
   if (playerAbility === undefined) return;
-
-  playerAbility.classList.remove('selected');
+  
   playerAbility.classList.add('used');
-
   enemyAbility = getComputerAbility();
-  activateAbility(playerAbility.getAttribute('id')[0], 'player');
-  nextRoundButton.classList.toggle('engraved-text');
-  usedAbility = true;
-  activateAbility(enemyAbility, 'enemy');
+  let playerAbilityType = playerAbility.getAttribute('id')[0];
+  let enemyAbilityType = enemyAbility[0];
+
+  activateAbility(playerAbilityType, 'player');
+  activateAbility(enemyAbilityType, 'enemy');
+  commentaryText.textContent = `Enemy used ${enemyAbility}!`;
   updateScore();
   playedRounds++;
+  usedAbility = true;
+  nextRoundButton.classList.toggle('engraved-text');
   if (playedRounds >= 3) setWinner();
 }
 
@@ -295,6 +290,26 @@ function getComputerAbility() {
 
 function activateAbility(type, side) {
   console.log(`The ${side} chose ${type}`);
+  let otherSide = (side === "player") ? "enemy" : "player";
+  let otherBoard = document.querySelector(`.${otherSide}`);
+  let affectedType = (type === 'r') ? 's' : (type === 's') ? 'p' : 'r';
+  for (const section of otherBoard.children)
+  {
+    let cards = section.lastElementChild;
+    let sectionScore = section.children[1];
+    for (const card of cards.children)
+    {
+      let cardType = card.getAttribute('id')[0];
+      if (cardType === affectedType)
+      {
+        let cardDamage = card.firstChild.firstChild;
+        cardDamage.style.cssText = "background-color: rgb(255, 63, 29);";
+        let newDamage = Math.ceil(Number(cardDamage.textContent) / 2);
+        sectionScore.textContent = Number(sectionScore.textContent) - (Number(cardDamage.textContent) - newDamage);
+        cardDamage.textContent = newDamage;
+      }
+    }
+  }
 }
 
 function setWinner() {
