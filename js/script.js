@@ -56,10 +56,11 @@ function resetGame() {
   /* Abilities */
   for (const ability of abilitySection.children)
     ability.classList.remove('used');
-
   for (const ability of enemyAbilitiesUsed)
     ability = false;
-  toggleAbilitiesSection();
+  const abilitiesHeader = document.querySelector('.abilities-section h3');
+  if (!abilitiesHeader.classList.contains('color-effect'));
+    toggleAbilitiesSection();
 
   /* Board scores */
   playerScore.textContent = 0;
@@ -199,8 +200,6 @@ function getComputerSelection() {
   const enemyCard = addCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], name);
   return enemyCard;
 }
-
-
 
 function playCard(card, side) {
   console.log(`${side} selected: ${card.lastChild.textContent}`);
