@@ -42,7 +42,7 @@ body {
   text-shadow: 2px 5px 5px rgba(255, 255, 255, 0.3);
 }
 
-.engraved-text.color-effect{
+.engraved-text.color-effect {
   color: transparent;
   background: var(--secondary-contrast);
   -webkit-background-clip: text;
@@ -299,44 +299,6 @@ button.engraved-text {
   opacity: 0.2;
 }
 
-@media screen and (max-width: 900px) {
-  .title {
-    margin-top: 1em;
-    font-size: 30px;
-  }
-  .table {
-    gap: 0;
-    padding: 1em;
-  }
-
-  .board {
-    gap: 1.5em;
-  }
-
-  .commentary {
-    font-size: 1em;
-  }
-
-  .total-points {
-    width: 2em;
-    height: 2em;
-    font-size: 14px;
-  }
-
-  .score {
-    font-size: 32px;
-  }
-
-  .abilities-section h3 {
-    font-size: 1em;
-  }
-
-  .controls button {
-    font-size: 14px;
-    padding: 3px 6px;
-  }
-}
-
 /* Cards */
 #deck {
   margin-top: 1em;
@@ -429,18 +391,117 @@ button.engraved-text {
   color: var(--bg);
 }
 
+#deck .card-holder .name {
+  transform: translate(0, 0px);
+  height: auto;
+  color: var(--bg);
+}
+
+#deck .card-holder:hover {
+  transform: translate(0, -10px);
+}
+
+.footer {
+  font-size: 0.5em;
+}
+
+.footer {
+  padding: 1em 3em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.sub {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2em;
+}
+
+.footer a {
+  text-decoration: none;
+  color: var(--primary-contrast);
+}
+
+.icons .fa {
+  color: var(--primary-contrast);
+  padding: 0.5em;
+}
+
+.pop {
+  transition: 0.3s ease;
+}
+
+.pop:hover {
+  translate: -3px 3px;
+  box-shadow: 5px -6px var(--secondary-contrast);
+}
+
 @media screen and (max-width: 900px) {
+  .title {
+    margin-top: 1em;
+    font-size: 30px;
+  }
+
+  .table {
+    gap: 0;
+    padding: 1em;
+  }
+
+  .board {
+    gap: 1.5em;
+  }
+
+  .commentary {
+    font-size: 1em;
+  }
+
+  .total-points {
+    width: 2em;
+    height: 2em;
+    font-size: 14px;
+  }
+
+  .score {
+    font-size: 32px;
+  }
+
+  .abilities-section h3 {
+    font-size: 1em;
+  }
+
+  .controls button {
+    font-size: 14px;
+    padding: 3px 6px;
+  }
+
   .card-holder {
     justify-content: space-between;
   }
 
-  #deck .card-holder .name {
-    transform: translate(0, 0px);
-    height: auto;
-    color: var(--bg);
+  .sub {
+    align-items: flex-start;
+    gap: 0.2em;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    gap: 0.5em;
   }
 
-  #deck .card-holder:hover {
-    transform: translate(0, -10px);
+  #information {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .sub {
+    gap: 0.5em;
   }
 }
