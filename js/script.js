@@ -20,7 +20,7 @@ enemyAbilitiesUsed['scissors-ability'] = false;
 let playerScore = document.querySelector('#player-score');
 let enemyScore = document.querySelector('#enemy-score');
 
-let playerCardsPlayedInRound = 4;
+let playableCardsPerRound = 4;
 let playedRounds = 0;
 let usedAbility = false;
 
@@ -41,7 +41,6 @@ function toggleEngrave() {
 }
 
 function startGame() {
-  console.log(playerDeckCards.firstChild);
   if (startGameButton.classList.contains('engraved-text')) return;
   toggleEngrave();
 
@@ -77,7 +76,7 @@ function nextRound() {
   resetBoard();
   toggleAbilitiesSection();
 
-  playerCardsPlayedInRound = SELECTIONS_PER_ROUND;
+  playableCardsPerRound = SELECTIONS_PER_ROUND;
   generateDeck();
 }
 
@@ -108,7 +107,7 @@ function resetBoard() {
     section.querySelector('.cards').innerHTML = "";
 
   /* Constants */
-  playerCardsPlayedInRound = SELECTIONS_PER_ROUND;
+  playableCardsPerRound = SELECTIONS_PER_ROUND;
   usedAbility = false;
 }
 
@@ -122,7 +121,6 @@ function generateDeck() {
     let name = cardsID[randomID].replaceAll('-', ' ');
     name = name.replace(/\b\w/g, l => l.toUpperCase());
     const card = addCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], name);
-    console.log(card);
     playerDeckCards.appendChild(card);
   }
   commentaryText.textContent = 'Pick 4 Cards!';
@@ -151,7 +149,7 @@ function addCard(id, damage, type, name) {
   infoDiv.appendChild(typeDiv);
   card.appendChild(infoDiv);
   card.appendChild(p);
-  const url = "./img/" + id + ".jpeg";
+  const url = "./img/" + id + ".jpg";
   card.style.cssText = `background: url(${url});
   background-position: center; background-size: cover;`;
 
@@ -160,31 +158,25 @@ function addCard(id, damage, type, name) {
 
 playerDeckCards.addEventListener('click', game);
 
-function game() {
-  let enemySelection, playerSelection = undefined;
-  if (!nextRoundButton.classList.contains('engraved-text')) return;
-  if (playerCardsPlayedInRound <= 0) {
+function game(event) {
+  if (event.target == playerDeckCards) return;
+  if (playableCardsPerRound <= 0) {
     commentaryText.textContent = `All 4 Cards Picked!`;
     return;
   }
 
-  for (const card of playerDeckCards.childNodes) {
-    card.addEventListener('click', (event) => {
-      if (event.target.parentNode == playerDeckCards)
-        event.target.classList.add('selected');
-    });
-  }
-  playerSelection = playerDeckCards.querySelector('.selected');
-  playerSelection.classList.remove('selected');
-  if (playerSelection === undefined || playerSelection.parentNode != playerDeckCards) return;
+  let enemySelection = undefined;
+  let playerSelection = event.target.closest('.card-holder');
 
-  console.log(`player selected: ${playerSelection.lastChild.textContent}`);
+  if (playerSelection === undefined) return;
+  playableCardsPerRound--;
+  playCard(playerSelection, 'player');
+
   enemySelection = getComputerSelection();
-  console.log(`enemy selected: ${enemySelection.lastChild.textContent}`);
-  playRound(playerSelection, enemySelection);
-  updateDeck(playerSelection, enemySelection);
+  setTimeout(playCard(enemySelection, 'enemy'), 2000);
+  console.log("Done!");
 
-  if (playerCardsPlayedInRound <= 0)
+  if (playableCardsPerRound <= 0)
     toggleAbilitiesSection();
 }
 
@@ -204,86 +196,36 @@ function getComputerSelection() {
   let name = cardsID[randomID].replaceAll('-', ' ');
   name = name.replace(/\b\w/g, l => l.toUpperCase());
   commentaryText.textContent = `Enemy Picked ${name}!`;
-  const enemyCard = addCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], "");
+  const enemyCard = addCard(cardsID[randomID], cardsDamage[randomID], cardsType[randomID], name);
   return enemyCard;
 }
 
-function playRound(playerCard, enemyCard) {
-  let playerCardDamage = Number(playerCard.firstChild.firstChild.textContent);
-  let enemyCardDamage = Number(enemyCard.firstChild.firstChild.textContent);
-  let playerCardType = playerCard.querySelector('.info .type').textContent[0];
-  let enemyCardType = enemyCard.querySelector('.info .type').textContent[0];
 
-  switch (playerCardType) {
-    case 'M':
-      let playerMeleeScore = document.querySelector('#player-melee-score');
-      playerMeleeScore.textContent = Number(playerMeleeScore.textContent) + playerCardDamage;
-      break;
-    case 'R':
-      let playerRangeScore = document.querySelector('#player-range-score');
-      playerRangeScore.textContent = Number(playerRangeScore.textContent) + playerCardDamage;
-      break;
-    case 'S':
-      let playerSiegeScore = document.querySelector('#player-siege-score');
-      playerSiegeScore.textContent = Number(playerSiegeScore.textContent) + playerCardDamage;
-      break;
-  }
 
-  switch (enemyCardType) {
-    case 'M':
-      let enemyMeleeScore = document.querySelector('#enemy-melee-score');
-      enemyMeleeScore.textContent = Number(enemyMeleeScore.textContent) + enemyCardDamage;
-      break;
-    case 'R':
-      let enemyRangeScore = document.querySelector('#enemy-range-score');
-      enemyRangeScore.textContent = Number(enemyRangeScore.textContent) + enemyCardDamage;
-      break;
-    case 'S':
-      let enemySiegeScore = document.querySelector('#enemy-siege-score');
-      enemySiegeScore.textContent = Number(enemySiegeScore.textContent) + enemyCardDamage;
-      break;
-  }
+function playCard(card, side) {
+  console.log(`${side} selected: ${card.lastChild.textContent}`);
+  let cardType = card.firstChild.lastChild.textContent;
+  cardType = (cardType == "M") ? "melee" : (cardType == "R") ? "range" : "siege";
+  playRound(card, side, cardType);
+  updateDeck(card, side, cardType);
 }
 
-function updateDeck(playerCard, enemyCard) {
-  let playerCardType = playerCard.querySelector('.info .type').textContent[0];
-  let enemyCardType = enemyCard.querySelector('.info .type').textContent[0];
+function playRound(card, side, type) {
+  let cardDamage = Number(card.firstChild.firstChild.textContent);
+  let cardType = card.querySelector('.info .type').textContent[0];
+  let score = document.querySelector(`#${side}-${type}-score`);
+  
+  score.textContent = Number(score.textContent) + cardDamage;
+}
 
-  playerCard.firstChild.style.cssText = 'justify-content: flex-start;';
-  switch (playerCardType) {
-    case 'M':
-      let playerMeleeDeck = document.querySelector('#player-melee');
-      playerMeleeDeck.appendChild(playerCard);
-      break;
-    case 'R':
-      let playerRangeDeck = document.querySelector('#player-range');
-      playerRangeDeck.appendChild(playerCard);
-      break;
-    case 'S':
-      let playerSiegeDeck = document.querySelector('#player-siege');
-      playerSiegeDeck.appendChild(playerCard);
-      break;
-  }
-  enemyCard.firstChild.style.cssText = 'justify-content: flex-start;';
-  switch (enemyCardType) {
-    case 'M':
-      let enemyMeleeDeck = document.querySelector('#enemy-melee');
-      enemyMeleeDeck.appendChild(enemyCard);
-      break;
-    case 'R':
-      let enemyRangeDeck = document.querySelector('#enemy-range');
-      enemyRangeDeck.appendChild(enemyCard);
-      break;
-    case 'S':
-      let enemySiegeDeck = document.querySelector('#enemy-siege');
-      enemySiegeDeck.appendChild(enemyCard);
-      break;
-  }
-  playerCard.firstChild.removeChild(playerCard.querySelector('.info .type'));
-  playerCard.removeChild(playerCard.querySelector('.name'));
-  enemyCard.firstChild.removeChild(enemyCard.querySelector('.info .type'));
-  enemyCard.removeChild(enemyCard.querySelector('.name'));
-  playerCardsPlayedInRound--;
+function updateDeck(card, side, type) {
+  card.firstChild.style.cssText = 'justify-content: flex-start;';
+  card.firstChild.removeChild(card.querySelector('.info .type'));
+  card.removeChild(card.querySelector('.name'));
+  
+  let cardDeck = document.querySelector(`#${side}-${type}`);
+  cardDeck.appendChild(card);
+  console.log(`${side}'s card is in the #${side}-${type} deck`);
 }
 
 function updateScore() {
@@ -309,7 +251,7 @@ function updateScore() {
 abilitySection.addEventListener('click', abilitySystem);
 
 function abilitySystem() {
-  if (playerCardsPlayedInRound > 0) {
+  if (playableCardsPerRound > 0) {
     commentaryText.textContent = `Play Your Cards First!`;
     return;
   }
