@@ -60,7 +60,7 @@ function resetGame() {
     ability = false;
   const abilitiesHeader = document.querySelector('.abilities-section h3');
   if (!abilitiesHeader.classList.contains('color-effect'));
-    toggleAbilitiesSection();
+  toggleAbilitiesSection();
 
   /* Board scores */
   playerScore.textContent = 0;
@@ -213,7 +213,7 @@ function playRound(card, side, type) {
   let cardDamage = Number(card.firstChild.firstChild.textContent);
   let cardType = card.querySelector('.info .type').textContent[0];
   let score = document.querySelector(`#${side}-${type}-score`);
-  
+
   score.textContent = Number(score.textContent) + cardDamage;
 }
 
@@ -221,7 +221,7 @@ function updateDeck(card, side, type) {
   card.firstChild.style.cssText = 'justify-content: flex-start;';
   card.firstChild.removeChild(card.querySelector('.info .type'));
   card.removeChild(card.querySelector('.name'));
-  
+
   let cardDeck = document.querySelector(`#${side}-${type}`);
   cardDeck.appendChild(card);
   console.log(`${side}'s card is in the #${side}-${type} deck`);
@@ -262,7 +262,7 @@ function abilitySystem(event) {
   let enemyAbility = undefined;
   let playerAbility = event.target;
   if (playerAbility === undefined) return;
-  
+
   playerAbility.classList.add('used');
   enemyAbility = getComputerAbility();
   let playerAbilityType = playerAbility.getAttribute('id')[0];
@@ -274,8 +274,9 @@ function abilitySystem(event) {
   updateScore();
   playedRounds++;
   usedAbility = true;
-  nextRoundButton.classList.toggle('engraved-text');
   if (playedRounds >= 3) setWinner();
+  else
+    nextRoundButton.classList.toggle('engraved-text');
 }
 
 function getComputerAbility() {
@@ -292,15 +293,12 @@ function activateAbility(type, side) {
   let otherSide = (side === "player") ? "enemy" : "player";
   let otherBoard = document.querySelector(`.${otherSide}`);
   let affectedType = (type === 'r') ? 's' : (type === 's') ? 'p' : 'r';
-  for (const section of otherBoard.children)
-  {
+  for (const section of otherBoard.children) {
     let cards = section.lastElementChild;
     let sectionScore = section.children[1];
-    for (const card of cards.children)
-    {
+    for (const card of cards.children) {
       let cardType = card.getAttribute('id')[0];
-      if (cardType === affectedType)
-      {
+      if (cardType === affectedType) {
         let cardDamage = card.firstChild.firstChild;
         cardDamage.style.cssText = "background-color: rgb(255, 63, 29);";
         let newDamage = Math.ceil(Number(cardDamage.textContent) / 2);
