@@ -391,16 +391,6 @@ button.engraved-text {
   color: var(--bg);
 }
 
-#deck .card-holder .name {
-  transform: translate(0, 0px);
-  height: auto;
-  color: var(--bg);
-}
-
-#deck .card-holder:hover {
-  transform: translate(0, -10px);
-}
-
 .footer {
   font-size: 0.5em;
 }
@@ -481,6 +471,16 @@ button.engraved-text {
 
   .card-holder {
     justify-content: space-between;
+  }
+
+  #deck .card-holder .name {
+    transform: translate(0, 0px);
+    height: auto;
+    color: var(--bg);
+  }
+
+  #deck .card-holder:hover {
+    transform: translate(0, -10px);
   }
 
   .sub {
